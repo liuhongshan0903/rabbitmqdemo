@@ -93,6 +93,60 @@ public class RabbitmqConfig {
     }
 
 
+     /**
+      * 用户操作日志消息模型  DirectExchange
+      * 1 创建一个消息队列queue
+      * 2 创建一个topic的交换机
+      * 3 交换机和队列之间绑定 用指定的路由
+      * @param:
+      * @auther: liuhongshan
+      * @date: 2019/10/3 16:15
+      */
+
+
+     @Bean(name = "logUserQueue")
+     public Queue logUserQueue(){
+         return new Queue(env.getProperty("log.user.queue.name"),true);
+     }
+
+    @Bean
+    public DirectExchange logUserExchange(){
+        return new DirectExchange(env.getProperty("log.user.exchange.name"),true,false);
+    }
+
+    @Bean
+    public Binding logUserBinding(){
+        return BindingBuilder.bind(logUserQueue()).to(logUserExchange()).with(env.getProperty("log.user.routing.key.name"));
+    }
+
+
+
+
+    /**
+     * 系统日志模型  也采用广播形式
+     * @auther: liuhongshan
+     * @mail: liuhongshan@sinovatech.com
+     * @Date:  2019/10/5 19:04
+     */
+
+
+    @Bean(name = "logSystemQueue")
+    public Queue logSystemQueue(){
+        return new Queue(env.getProperty("log.system.queue.name"),true);
+    }
+
+    @Bean
+    public TopicExchange logSystemExchange(){
+        return new TopicExchange(env.getProperty("log.system.exchange.name"),true,false);
+    }
+
+    @Bean
+    public Binding logSystemBinding(){
+        return BindingBuilder.bind(logSystemQueue()).to(logSystemExchange()).with(env.getProperty("log.system.routing.key.name"));
+    }
+
+
+
     //TODO：基本消息模型构建
 
     @Bean
@@ -173,8 +227,12 @@ public class RabbitmqConfig {
 
 
 
-    //TODO：用户商城抢单实战
-
+     /**
+      * 用户商城抢单实战  高并发
+      * @param:
+      * @auther: liuhongshan
+      * @date: 2019/10/5 20:12
+      */
     @Bean(name = "userOrderQueue")
     public Queue userOrderQueue(){
         return new Queue(env.getProperty("user.order.queue.name"),true);
@@ -193,6 +251,12 @@ public class RabbitmqConfig {
     @Autowired
     private UserOrderListener userOrderListener;
 
+     /**
+      * 设置userOrderQueue 队列监听类的 的并发处理机制
+      * @param:
+      * @auther: liuhongshan
+      * @date: 2019/10/5 20:13
+      */
     @Bean
     public SimpleMessageListenerContainer listenerContainerUserOrder(@Qualifier("userOrderQueue") Queue userOrderQueue){
         SimpleMessageListenerContainer container=new SimpleMessageListenerContainer();
@@ -213,42 +277,6 @@ public class RabbitmqConfig {
     }
 
 
-
-
-    //TODO：系统日志消息模型
-
-    @Bean(name = "logSystemQueue")
-    public Queue logSystemQueue(){
-        return new Queue(env.getProperty("log.system.queue.name"),true);
-    }
-
-    @Bean
-    public TopicExchange logSystemExchange(){
-        return new TopicExchange(env.getProperty("log.system.exchange.name"),true,false);
-    }
-
-    @Bean
-    public Binding logSystemBinding(){
-        return BindingBuilder.bind(logSystemQueue()).to(logSystemExchange()).with(env.getProperty("log.system.routing.key.name"));
-    }
-
-
-    //TODO：用户操作日志消息模型
-
-    @Bean(name = "logUserQueue")
-    public Queue logUserQueue(){
-        return new Queue(env.getProperty("log.user.queue.name"),true);
-    }
-
-    @Bean
-    public DirectExchange logUserExchange(){
-        return new DirectExchange(env.getProperty("log.user.exchange.name"),true,false);
-    }
-
-    @Bean
-    public Binding logUserBinding(){
-        return BindingBuilder.bind(logUserQueue()).to(logUserExchange()).with(env.getProperty("log.user.routing.key.name"));
-    }
 
 
     //TODO：发送邮件消息模型

@@ -14,7 +14,7 @@ import java.util.concurrent.CountDownLatch;
 public class InitService {
     private static final Logger log= LoggerFactory.getLogger(InitService.class);
 
-    public static final int ThreadNum = 50000;
+    public static final int ThreadNum = 10000;
 
     private static int mobile=0;
 

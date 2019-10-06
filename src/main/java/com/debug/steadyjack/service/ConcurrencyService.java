@@ -49,12 +49,15 @@ public class ConcurrencyService {
             Product product=productMapper.selectByProductNo(ProductNo);
             if (product!=null && product.getTotal()>0){
                 int result=productMapper.updateTotal(product);
+                log.info("恭喜{}抢到啦 ",mobile);
                 if (result>0) {
                     ProductRobbingRecord entity=new ProductRobbingRecord();
                     entity.setMobile(mobile);
                     entity.setProductId(product.getId());
                     productRobbingRecordMapper.insertSelective(entity);
                 }
+            } else {
+                log.info("库存总量为0，{}未抢到 ",mobile);
             }
         }catch (Exception e){
             log.error("处理抢单发生异常：mobile={} ",mobile);

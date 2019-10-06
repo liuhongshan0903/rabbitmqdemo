@@ -51,9 +51,13 @@ public class UserController {
     @Autowired
     private Environment env;
 
-    @RequestMapping(value = Prefix+"/login",method = RequestMethod.POST,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public BaseResponse login(@RequestParam("userName") String userName,@RequestParam("password") String password){
+    //@RequestMapping(value = Prefix+"/login",method = RequestMethod.POST,consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    //public BaseResponse login(@RequestParam("userName") String userName,@RequestParam("password") String password){
+    @RequestMapping(value = Prefix+"/login")
+    public BaseResponse login(){
         BaseResponse response=new BaseResponse(StatusCode.Success);
+        String  userName="jack";
+        String password ="123456";
         try {
             User user=userMapper.selectByUserNamePassword(userName,password);
             if (user!=null){
